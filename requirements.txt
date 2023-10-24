@@ -1,0 +1,4 @@
+cv2
+pyttsx3
+threading
+ultralytics==8.0.23
