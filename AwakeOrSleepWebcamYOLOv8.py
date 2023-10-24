@@ -3,7 +3,6 @@ import os
 import time
 from ultralytics import YOLO
 import pyttsx3
-import threading
 
 model_path = os.path.join('.', 'runs', 'detect', 'train', 'weights', 'last.pt')
 
@@ -26,27 +25,20 @@ new_frame_time = 0
 
 # Innitializing pyttsx3 engine
 engine = pyttsx3.init()
+
 # Alert function to run speach command in a seperate thread
 def alert():
-    # Convert text to speech and play it in a separate thread
-    def play_speech():
-        engine.say("Be Alert!")
-        engine.runAndWait()
-    
-    # Create a thread to play the speech
-    speech_thread = threading.Thread(target=play_speech)
-    speech_thread.start()
+    engine.say("Be Alert!")
+    engine.runAndWait()
 
-count = 1   # Counter for Alert
+count = 0   # Counter for Alert
 
 while ret:
     # If images are in grayscale, use the following commented lines.
     # grayframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     # reshapedframe = cv2.cvtColor(grayframe, cv2.COLOR_GRAY2RGB)
     # results = model(reshapedframe)[0]
-
     results = model(frame)[0]
-
     for result in results.boxes.data.tolist():
         x1, y1, x2, y2, score, class_id = result
         if score > threshold:
@@ -57,10 +49,11 @@ while ret:
                 count = 0
             elif results.names[int(class_id)].upper() == "SLEEP":
                 count += 1
-
-    # After about 4 seconds of consistent SLEEP detection on my Machine (I am getting 8 fps) 
-    if count % 32 == 0:
-        alert()
+                
+                # After about 4 seconds of consistent SLEEP detection on my Machine (I am getting 8 fps) 
+                if count > 32:
+                    alert()
+                    count = 0
 
     # Calculating the fps
     new_frame_time = time.time()
@@ -69,7 +62,7 @@ while ret:
   
     # Converting the fps into integer an then into string
     fps = str(int(fps))
-  
+
     # Putting the FPS count on the frame
     cv2.putText(frame, fps, (7, 70), cv2.FONT_HERSHEY_SIMPLEX, 3, (100, 255, 0), 3, cv2.LINE_AA)
 
@@ -81,5 +74,6 @@ while ret:
     if c == 27:
         break
     
+# Release Webcam and close Image Windows
 cap.release()
 cv2.destroyAllWindows()
