@@ -10,7 +10,7 @@ pip install -r requirements.txt
 
 Download the YOLOv8 model weights and place them in the specified directory:
 ```
-runs/detect/train/weights/last.pt
+./runs/detect/train/weights/last.pt
 ```
 
 Run the Webcam YOLOv8 detector script:
@@ -32,3 +32,16 @@ Modify the alert trigger duration by changing the condition in the if count % 32
 
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request with your changes.
+
+## Dataset Privacy Notice
+
+Please note that the dataset used for training this model is not provided in this repository due to privacy concerns. 
+
+The dataset is essential for training the model. However, you will need to source your own dataset for training purposes.
+
+### Directory Structure
+- Images: `./data/Awake&Sleep/images/train`
+- Labels: `./data/Awake&Sleep/labels/train`
+
+For privacy and ethical reasons, we are unable to provide the dataset. If you want to train your own model, please make sure to source your own dataset with images of open and closed eyes and corresponding labels indicating awake or sleep states. Ensure that your dataset follows a similar directory structure for successful training.
+
